@@ -11,7 +11,6 @@ module.exports = {
 				japanese = req.param("japanese"),
 				kanji = req.param("kanji"),
 				tags = req.param("tags");
-		console.log("english", english, "japanese",japanese, "tags",tags, "kanji", kanji);
 		Card.create({english:english, japanese:japanese, tags:tags, kanji:kanji}).exec(function(err,c) {
 			if (err) {
 				console.error(err);
@@ -33,7 +32,6 @@ module.exports = {
 				for (var temp, i = 0, length = c.length; i < length; ++i) {
 					c[i].tags = c[i].tags.split(",");
 				}
-				console.log("found card",c);
 				res.json(c);
 			} else {
 				res.badRequest();

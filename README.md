@@ -1,26 +1,19 @@
-# sails-budget
+# sails-cards
 
-A simple budgeting application built in sails js.
+Annoyed that I couldn't find a simple flash card app that would allow tagging of categories, I decided to make my own.
 
-Add your sources of income, your state, and how much you (and your employer)
-contribute to your 401K and instantly see your take home.
+Currently just for my Japanese class, so table names are specific to that, will generalize soon.
 
-Add the amount you spend on categories to see how much you're left with after your
-monthly bills.
+Installation:
+1. Clone
+2. npm install
+3. Create a mysql database for this project
+4. Create a config/local.js file with your mysql information that looks like this: https://gist.github.com/anonymous/6cc63716263ca61a0af2
+5. run node app.js or sails lift
 
-Uses sails-mysql to store info.  Configure your mysql db in config/local.js.
-Tax brackets and deductions are installed on first run of sails lift,
-simply select which ones you are using in the app.
-
-A variety of categories are provided to get you started.  These include:
-Rent, Food, Utilities, Electricity, Internet, Phone, Savings, Car
-Feel free to add your own.
 
 UI is based on the Verti template http://html5up.net/verti
 Could definitely look a lot better, but this was a quick project.  If you've got
 the time, spruce it up and let me know how it turns out!
-
-Might be some weirdness when calculating tax witholdings as < $0.01 rounding errors
-over enough pay periods can cause $5-10 errors.
 
 a [Sails](http://sailsjs.org) application
