@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+	<body class="homepage">
+		<!-- Take Home -->
+			<div id="banner-wrapper">
+				<div id="nonStudy">
+					<div id="banner" class="box container banner">
+						<div class="row">
+							<div class="12u">
+								<h2 class="head">Japanese Study</h2>
+							</div>
+						</div>
+					</div>
+					<div id="insertContainer" class="box container banner">
+						<div id="newForm">
+							<legend>Insert a New Word</legend>
+			        <input type="text" id="newEnglish" class="typeahead" placeholder="English">
+			        <input type="text" id="newJapanese" class="typeahead" placeholder="Japanese">
+			        <input type="text" id="newKanji" class="typeahead" placeholder="Kanji">
+			        <input type="text" id="newTags" class="typeahead" placeholder="Tags">
+			        <button type="submit" id="insertCard" class="pure-button pure-button-primary">Insert</button>
+						</diV>
+					</div>
+					<div id="tagContainer" class="box container banner">
+						<h3 class="head">Select Tags</h3>
+						<div id="allTags"></div>
+					</div>
+					<div class="box container banner">
+						<div class="onoffswitch">
+					    <input type="checkbox" name="whichFirst" class="onoffswitch-checkbox" id="whichFirst" checked>
+					    <label class="onoffswitch-label" for="whichFirst">
+					        <span class="onoffswitch-inner"></span>
+					        <span class="onoffswitch-switch"></span>
+					    </label>
+						</div>
+						<div class="onoffswitch">
+					    <input type="checkbox" name="anyKanji" class="onoffswitch-checkbox" id="anyKanji" checked>
+					    <label class="onoffswitch-label" for="anyKanji">
+					        <span class="anyKanji-inner"></span>
+					        <span class="anyKanji-switch"></span>
+					    </label>
+						</div>
+						<div class="onoffswitch">
+					    <input type="checkbox" name="anyKanji" class="onoffswitch-checkbox" id="shuffle" checked>
+					    <label class="onoffswitch-label" for="shuffle">
+					        <span class="shuffle-inner"></span>
+					        <span class="shuffle-switch"></span>
+					    </label>
+						</div>
+						<button id="beginStudy" class="pure-button studyButton">Study</button>
+					</div>
+					<div id="listContainer" class="box container banner">
+						<div class="row  listTitle">
+							<div class="4u ">English</div>
+							<div class="4u ">Japanese</div>
+							<div class="4u ">Tags</div>
+						</div>
+						<div id="allCards"></div>
+					</div>
+				</div>
+				<div id="study-mode">
+					<div class="box container banner">
+						<div class="row">
+							<span id="cardProgress">Card 1 / 12</span>
+						</div>
+						<div class="row">
+							<div class="12u">
+								<h2 id="card" class="head">Test</h2>
+							</div>
+						</div>
+					</div>
+					<button id="endStudy" class="pure-button studyButton">Return</button>
+				</div>
+			</div>
+	</body>
+</html>
