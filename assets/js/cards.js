@@ -39,7 +39,7 @@ $(document).ready(function(){
       insert();
     }
     if (slideShow) {
-      if(e.which === 32) {
+      if(e.which === 32 || e.which === 40) {
         flipCard();
       }
       if(e.which === 13 || e.which === 39) {
