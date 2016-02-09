@@ -37,5 +37,22 @@ module.exports = {
 				res.badRequest();
 			}
 		});
+	}, clearCurrent: function(req, res) {
+		Card.find({}, {select: ['id', 'japanese', 'english', 'kanji', 'tags']}).exec(function(err,c) {
+			if (err) {
+				console.error(err);
+				res.serverError(err);
+			} else if (c) {
+				for (var temp, i = 0, length = c.length; i < length; ++i) {
+					if (c[i].tags.match(/,current/)) {
+						c[i].tags = c[i].tags.replace(/,current/,"");
+						c[i].save();
+					}
+				}
+				res.ok();
+			} else {
+				res.badRequest();
+			}
+		});
 	}
 };

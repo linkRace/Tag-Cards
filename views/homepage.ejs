@@ -47,7 +47,7 @@
 					        <span class="shuffle-switch"></span>
 					    </label>
 						</div>
-						<button id="beginStudy" class="pure-button studyButton">Study</button>
+						<button id="beginStudy" class="pure-button switchButton studyButton">Study</button>
 					</div>
 					<div id="listContainer" class="box container banner">
 						<div class="row  listTitle">
@@ -61,7 +61,13 @@
 				<div id="study-mode">
 					<div class="box container banner">
 						<div class="row">
-							<span id="cardProgress">Card 1 / 12</span>
+							<div class="10u">
+								<span id="cardProgress">Card 1 / 12</span>
+							</div>
+							<div class="2u">
+								<label for="checkCard" id="checkLabel">Restudy</label>
+								<input type="checkbox" class="checkCard" name="checkCard" />
+							</div>
 						</div>
 						<div class="row">
 							<div class="12u">
@@ -69,7 +75,9 @@
 							</div>
 						</div>
 					</div>
-					<button id="endStudy" class="pure-button studyButton">Return</button>
+					<button id="reshuffle" class="pure-button studyButton reshuffleButton">Reshuffle</button>
+					<button id="reshuffle" class="pure-button studyButton restudyButton">Study Selected</button>
+					<button id="endStudy" class="pure-button studyButton returnButton switchButton">Return</button>
 				</div>
 			</div>
 	</body>

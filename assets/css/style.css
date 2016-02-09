@@ -22,8 +22,19 @@
 	min-height: 170px;
 }
 
-.studyButton {
+.returnButton {
+	left:60%;
+}
+
+.restudyButton {
 	left:50%;
+}
+
+.reshuffleButton {
+	left:40%;
+}
+
+.studyButton {
 	position:absolute;
 	margin-top:15px;
 }

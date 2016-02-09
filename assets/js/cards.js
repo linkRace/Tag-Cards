@@ -1,11 +1,11 @@
-var tags = [], cards = [], selected = [], cardOn = 0, slideShow = false, currentCard = 0, cardFlipped = false, startEnglish = false, studySide = "japanese";
+var tags = [], cards = [], selected = [], cardOn = 0, slideShow = false, currentCard = 0, cardFlipped = false, startEnglish = false, studySide = "japanese", restudy = [];
 
 $(document).ready(function(){
   $("#study-mode").hide();
   $(document).on( "click","#insertCard", function() {
     insert();
   });
-  $(document).on( "click",".studyButton", function() {
+  $(document).on( "click",".switchButton", function() {
     $("#study-mode").toggle();
     $("#nonStudy").toggle();
     if ($("#study-mode").is(":visible")) {
@@ -30,6 +30,21 @@ $(document).ready(function(){
       slideShow = false;
     }
   });
+  $(document).on( "click",".reshuffleButton", function() {
+    currentCard = 0;
+    cardFlipped = false;
+    selected = shuffle(selected);
+    advanceCard(true);
+  });
+  $(document).on( "click",".restudyButton", function() {
+    currentCard = 0;
+    cardFlipped = false;
+    getRestudyDeck();
+    advanceCard(true);
+  });
+  $(document).on( "click",".checkCard", function() {
+    selectCard();
+  });
   $(document).on( "click",".space", function(e) {
     $(this).toggleClass("pure-button-primary");
     getSelectedCards();
@@ -39,11 +54,16 @@ $(document).ready(function(){
       insert();
     }
     if (slideShow) {
+      debugger;
       if(e.which === 32 || e.which === 40) {
         flipCard();
       }
       if(e.which === 13 || e.which === 39) {
         advanceCard(true);
+      }
+      if (e.which === 38) {
+        $(".checkCard").click();
+        selectCard();
       }
       if(e.which === 37) {
         advanceCard(false);
@@ -342,6 +362,14 @@ $(document).ready(function(){
   refreshList();
 });
 
+function selectCard() {
+  if ($(".checkCard").is(":checked")) {
+    restudy.push(currentCard);
+  } else {
+    restudy.splice(restudy.length - 1, 1);
+  }
+}
+
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -370,23 +398,46 @@ function flipCard() {
   }
 }
 
+function getRestudyDeck() {
+  debugger;
+  for (var i = 1, length = selected.length, newSelected = []; i <= length; ++i) {
+    if ($.inArray(i, restudy) !== -1) {
+      newSelected.push(selected[i-1]);
+    }
+  }
+  selected = newSelected;
+  restudy = [];
+}
+
 function advanceCard(forward) {
   if (forward) {
     ++currentCard;
   } else {
     --currentCard;
   }
+  if (currentCard < 1) {
+    currentCard = 1;
+  }
   if (currentCard > selected.length) {
     currentCard = selected.length + 1; // keeps it from going way over end bound
     $("#card").html("All Done!");
     $("#cardProgress").html("End of Cards");
+    $(".checkCard").hide();
+    $("#checkLabel").hide();
   } else {
+    $(".checkCard").show();
+    $("#checkLabel").show();
     cardFlipped = !startEnglish;
     $("#cardProgress").html("Card " + currentCard + " / " + selected.length);
     if (cardFlipped) {
       $("#card").html(selected[currentCard - 1][studySide]);
     } else {
       $("#card").html(selected[currentCard - 1].english);
+    }
+    if ($.inArray(currentCard, restudy) !== -1) {
+      $(".checkCard").prop("checked", true);
+    } else {
+      $(".checkCard").prop("checked", false);
     }
   }
 }
