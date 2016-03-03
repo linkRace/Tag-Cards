@@ -1,4 +1,4 @@
-var tags = [], cards = [], selected = [], cardOn = 0, slideShow = false, currentCard = 0, cardFlipped = false, startEnglish = false, studySide = "japanese", restudy = [];
+var tags = [], cards = [], selected = [], cardOn = 0, slideShow = false, currentCard = 0, cardFlipped = false, startEnglish = false, studySide = "japanese", restudy = [], updating = false;
 
 $(document).ready(function(){
   $("#study-mode").hide();
@@ -49,9 +49,16 @@ $(document).ready(function(){
     $(this).toggleClass("pure-button-primary");
     getSelectedCards();
   });
+  $(document).on( "click",".update", function(e) {
+    $(e.target).replaceWith("<input id='" + e.target.id + "' type='text' class='updateInProgress' value='" + e.target.innerHTML + "' />");
+    updating = true;
+  });
   $(document).bind('keyup', function(e){
     if(e.which === 120) {
       insert();
+    }
+    if (e.which === 13 && updating) {
+      updateCard();
     }
     if (slideShow) {
       debugger;
@@ -362,6 +369,22 @@ $(document).ready(function(){
   refreshList();
 });
 
+function updateCard() {
+  var eid = $(".updateInProgress")[0].id, id = eid.substring(eid.indexOf(",") + 1), type = eid.substring(0,eid.indexOf(",")),
+  data = {};
+  data[type] = $(".updateInProgress")[0].value;
+  $.ajax({
+    url: 'card/' + id,
+    type: 'PUT',
+    data: data,
+    success: function(data) {
+      updating = false;
+      debugger;
+      $(".updateInProgress").replaceWith("<div id='" + eid + "' class='3u update'>" + $(".updateInProgress")[0].value + "</div>");
+    }
+  });
+}
+
 function selectCard() {
   if ($(".checkCard").is(":checked")) {
     restudy.push(currentCard);
@@ -467,9 +490,10 @@ function getSelectedCards() {
   }
   for (var cardList = "", i = 0, length = selected.length; i < length; ++i) {
     cardList += "<div class='row'>\
-      <div class='4u'>" + selected[i].english + "</div>\
-      <div class='4u'>" + selected[i].japanese + "</div>\
-      <div class='4u'>" + selected[i].tags + "</div>\
+      <div id='english," + selected[i].id + "' class='3u update'>" + selected[i].english + "</div>\
+      <div id='japanese," + selected[i].id + "' class='3u update'>" + selected[i].japanese + "</div>\
+      <div id='kanji," + selected[i].id + "' class='3u update'>" + selected[i].kanji + "</div>\
+      <div id='tags," + selected[i].id + "' class='3u update'>" + selected[i].tags + "</div>\
     </div>";
   }
   $("#allCards").html(cardList);
@@ -486,6 +510,7 @@ function refreshList() {
         }
       }
     }
+    tags.sort();
     for (var tagList = "", k = 0, length3 = tags.length; k < length3; ++k) {
       tagList += "<button class='pure-button space'>" + tags[k] + "</button>";
     }

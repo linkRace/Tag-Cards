@@ -14,12 +14,17 @@
 .space {
 	float:left;
 	margin-left:10px;
+	margin-top:5px;
 }
 
 .banner {
 	padding: 1.5em 3.5em 3.5em 3.5em;
   margin-top: 10px;
 	min-height: 170px;
+}
+
+#tagContainer {
+	min-height: 250px;
 }
 
 .returnButton {
@@ -36,7 +41,7 @@
 
 .studyButton {
 	position:absolute;
-	margin-top:15px;
+	margin-top:75px;
 }
 
 #study-mode {
