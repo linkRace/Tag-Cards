@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Japanese Study</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="firstSideArray">
+        <item>english</item>
+        <item>japanese</item>
+        <item>kanji</item>
+    </string-array>
+    <string-array name="secondSideArray">
+        <item>japanese</item>
+        <item>english</item>
+        <item>kanji</item>
+    </string-array>
+    <string-array name="verbConjugation">
+        <item>presPos</item>
+        <item>presNeg</item>
+        <item>pastPos</item>
+        <item>pastNeg</item>
+        <item>te</item>
+        <item>permission</item>
+        <item>mustNot</item>
+        <item>ing</item>
+    </string-array>
+    <string-array name="adjConjugation">
+        <item>presPos</item>
+        <item>presNeg</item>
+        <item>pastPos</item>
+        <item>pastNeg</item>
+    </string-array>
+</resources>

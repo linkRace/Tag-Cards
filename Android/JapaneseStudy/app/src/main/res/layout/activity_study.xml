@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/card_count"
+        android:text="Card X/X"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="10pt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_star_border_black_24dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:id="@+id/card_text_con"
+        android:text=""
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:textSize="15pt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/card_text"
+        android:text="Test"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="120dp"
+        android:textSize="30pt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/previous_button"
+        android:layout_width="125dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:text="Previous" />
+    <Button
+        android:id="@+id/flip_button"
+        android:layout_width="125dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        android:text="Flip" />
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="125dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="Next" />
+
+
+</RelativeLayout>
