@@ -1,5 +1,5 @@
 /**
-* Card.js
+* Kanji.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -8,7 +8,7 @@
 var Kanji = {
   schema: true
 , adapter: 'mysql'
-, tableName: 'card'
+, tableName: 'kanji'
 , attributes: {
     // english root meaning, ex Moon
     english: {

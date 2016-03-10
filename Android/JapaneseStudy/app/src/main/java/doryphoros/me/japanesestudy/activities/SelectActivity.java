@@ -125,7 +125,6 @@ public class SelectActivity extends AppCompatActivity {
             }
             selectedCards = new ArrayList<Card>();
             initTags();
-            kanji = (List<Kanji>) new Gson().fromJson(jsonElement, listType);
         } else {
             //error
         }

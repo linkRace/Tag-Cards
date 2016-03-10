@@ -11,15 +11,15 @@ module.exports = {
 				japanese = req.param("japanese"),
 				examples = req.param("examples"),
 				still = req.param("still"),
-				motion = req.param("motion"),
 				tags = req.param("tags");
-		Kanji.create({english:english, japanese:japanese, tags:tags, examples:examples, still: still, motion: motion}).exec(function(err,c) {
+		Kanji.create({english:english, japanese:japanese, tags:tags, still: still, examples:examples}).exec(function(err,c) {
 			if (err) {
 				console.error(err);
 				res.serverError(err);
 			} else if (c) {
 				console.log("created kanji",c);
-				res.ok();
+				c.motion = "kanjimotion" + c.id;
+				c.save(res.ok());
 			} else {
 				res.badRequest();
 			}

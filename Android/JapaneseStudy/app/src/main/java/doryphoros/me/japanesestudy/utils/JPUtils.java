@@ -128,7 +128,7 @@ public class JPUtils {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d(TAG, "failure");
+                        Log.d(TAG, "error");
                         Toast.makeText(context, "Failure! Data was not downloaded", Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
@@ -137,7 +137,7 @@ public class JPUtils {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, "failure");
+                Log.d(TAG, "error");
                 Toast.makeText(context, "Failure! Data was not downloaded", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
             }
