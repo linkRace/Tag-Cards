@@ -52,8 +52,13 @@ public class SelectActivity extends AppCompatActivity {
     public static ArrayList<String> badConTags;
     public static List<Card> cards;
     public static List<Kanji> kanji;
+    public static ArrayList<Kanji> selectedKanji;
+    public static ArrayList<Tag> kanjiTags;
+    public static ArrayList<String> selectedKanjiTags;
+    public static ArrayList<String> badKanjiTags;
     public static ArrayList<Card> selectedCards;
     public static String firstSide, secondSide;
+    public static boolean read;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,7 @@ public class SelectActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Button cardsButton = (Button) findViewById(R.id.cards_button);
+        read = true;
         cardsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,8 +139,13 @@ public class SelectActivity extends AppCompatActivity {
         if (file.exists()) {
             jsonElement = JPUtils.getJsonFromFile(this, JPConstants.KANJI_DATA_FILENAME);
             Log.d("MainACTIVITY", "read from file: " + jsonElement.toString());
-            Type listType = new TypeToken<List<Card>>(){}.getType();
+            Type listType = new TypeToken<List<Kanji>>(){}.getType();
             kanji = (List<Kanji>) new Gson().fromJson(jsonElement, listType);
+            for (Kanji k : kanji) {
+                k.createHash();
+            }
+            selectedKanji = new ArrayList<Kanji>();
+            initKanjiTags();
         } else {
             //error
         }
@@ -206,6 +217,28 @@ public class SelectActivity extends AppCompatActivity {
         });
     }
 
+    public void initKanjiTags() {
+        selectedKanjiTags = new ArrayList<String>();
+        badKanjiTags = new ArrayList<String>();
+        kanjiTags = new ArrayList<Tag>();
+        HashMap<String,Integer> hs = new HashMap<String, Integer>();
+        for (Kanji c : kanji) {
+            for (String s : c.tags) {
+                if (!hs.containsKey(s)) {
+                    hs.put(s, 1);
+                    kanjiTags.add(new Tag(0, s));
+                }
+            }
+        }
+        Collections.sort(kanjiTags, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag s1, Tag s2) {
+                return s1.value.compareToIgnoreCase(s2.value);
+            }
+        });
+        Log.d("SelectActivity", "kanji:" + kanji);
+    }
+
     public static void updateSelectedCards() {
         selectedCards = new ArrayList<>();
         int stLength = selectedTags.size(), st = 0, matched;
@@ -238,6 +271,38 @@ public class SelectActivity extends AppCompatActivity {
         }
     }
 
+    public static void updateSelectedKanji() {
+        selectedKanji = new ArrayList<>();
+        int stLength = selectedKanjiTags.size(), st = 0, matched;
+        // add cards that match all tags
+        for (int c = 0, length = kanji.size(); c < length; ++c) {
+            matched = 0;
+            for (st = 0; st < stLength; ++st) {
+                if (matched == st) {
+                    for (int t = 0, length2 = cards.get(c).tags.size(); t < length2; ++t) {
+                        if (selectedKanjiTags.get(st).equalsIgnoreCase(kanji.get(c).tags.get(t))) {
+                            ++matched;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (matched == stLength) {
+                selectedKanji.add(kanji.get(c));
+            }
+        }
+        // remove cards with bad tags
+        for (int s = 0, length = selectedKanji.size(); s < length; ++s) {
+            for (st = 0, stLength = badKanjiTags.size(); st < stLength; ++st){
+                if (selectedKanji.get(s).tags.contains(badKanjiTags.get(st))) {
+                    selectedKanji.remove(s);
+                    --s;
+                    --length;
+                }
+            }
+        }
+    }
+
     public static void shuffleSelectedCards() {
         Random rnd = ThreadLocalRandom.current();
         for (int i = SelectActivity.selectedCards.size() - 1; i > 0; i--)
@@ -247,6 +312,18 @@ public class SelectActivity extends AppCompatActivity {
             Card a = SelectActivity.selectedCards.get(index);
             SelectActivity.selectedCards.set(index, SelectActivity.selectedCards.get(i));
             SelectActivity.selectedCards.set(i, a);
+        }
+    }
+
+    public static void shuffleSelectedKanji() {
+        Random rnd = ThreadLocalRandom.current();
+        for (int i = SelectActivity.selectedKanji.size() - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            Kanji a = SelectActivity.selectedKanji.get(index);
+            SelectActivity.selectedKanji.set(index, SelectActivity.selectedKanji.get(i));
+            SelectActivity.selectedKanji.set(i, a);
         }
     }
 }

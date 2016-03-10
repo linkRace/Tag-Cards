@@ -33,8 +33,6 @@ module.exports = {
 			} else if (c) {
 				for (var temp, i = 0, length = c.length; i < length; ++i) {
 					c[i].tags = c[i].tags.split(",");
-					c[i].examples = c[i].examples.split(",");
-					c[i].japanese = c[i].japanese.split(",");
 				}
 				res.json(c);
 			} else {

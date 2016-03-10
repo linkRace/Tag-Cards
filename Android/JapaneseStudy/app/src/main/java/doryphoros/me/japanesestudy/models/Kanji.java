@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class Kanji implements Parcelable {
     public int id;
     public String english;
-    public ArrayList<String> examples;
-    public ArrayList<String> japanese;
+    public String examples;
+    public String japanese;
     public String motion;
     public String still;
     public ArrayList<String> tags;
@@ -30,18 +30,8 @@ public class Kanji implements Parcelable {
         } else {
             tags = null;
         }
-        if (in.readByte() == 0x01) {
-            japanese = new ArrayList<String>();
-            in.readList(japanese, String.class.getClassLoader());
-        } else {
-            japanese = null;
-        }
-        if (in.readByte() == 0x01) {
-            examples = new ArrayList<String>();
-            in.readList(examples, String.class.getClassLoader());
-        } else {
-            examples = null;
-        }
+        japanese = in.readString();
+        examples = in.readString();
     }
 
 
@@ -50,6 +40,8 @@ public class Kanji implements Parcelable {
         hm.put("english", english);
         hm.put("still", still);
         hm.put("motion", motion);
+        hm.put("japanese", japanese);
+        hm.put("examples", examples);
     }
 
     @Override
@@ -69,18 +61,8 @@ public class Kanji implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(tags);
         }
-        if (japanese == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(japanese);
-        }
-        if (examples == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(examples);
-        }
+        dest.writeString(japanese);
+        dest.writeString(examples);
     }
 
     @SuppressWarnings("unused")

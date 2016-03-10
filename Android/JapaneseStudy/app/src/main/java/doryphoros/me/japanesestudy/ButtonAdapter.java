@@ -54,7 +54,29 @@ public class ButtonAdapter extends ArrayAdapter<String> {
             public void onClick(View v) {
                 Button clickedButton = (Button) v;
                 String text = clickedButton.getText().toString();
-                if (!con.equalsIgnoreCase("default")) {
+                if (con.equalsIgnoreCase("kanji")) {
+                    ArrayList<Tag> searchThrough = SelectActivity.kanjiTags;
+                    for (Tag t : searchThrough) {
+                        if (t.value.equalsIgnoreCase(text)) {
+                            ++t.checked;
+                            if (t.checked > 2) {
+                                t.checked = 0;
+                            }
+                            if (t.checked == 1) {
+                                SelectActivity.selectedKanjiTags.add(t.value);
+                                clickedButton.setBackgroundColor(Color.CYAN);
+                            } else if (t.checked == 2) {
+                                SelectActivity.selectedKanjiTags.remove(t.value);
+                                SelectActivity.badKanjiTags.add(t.value);
+                                clickedButton.setBackgroundColor(Color.RED);
+                            } else {
+                                SelectActivity.badKanjiTags.remove(t.value);
+                                clickedButton.setBackgroundColor(Color.GRAY);
+                            }
+                            break;
+                        }
+                    }
+                } else if (!con.equalsIgnoreCase("default")) {
                     ArrayList<Tag> searchThrough;
                     if (con.equalsIgnoreCase("verb")) {
                         searchThrough = SelectActivity.verbTags;

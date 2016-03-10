@@ -1,16 +1,27 @@
 package doryphoros.me.japanesestudy.activities;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
+import android.media.session.MediaController;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import java.util.ArrayList;
 
 import doryphoros.me.japanesestudy.R;
-import doryphoros.me.japanesestudy.models.Card;
+import doryphoros.me.japanesestudy.models.Kanji;
+import doryphoros.me.japanesestudy.utils.DrawView;
 
 /**
  * Created by Link on 2/10/2016.
@@ -18,24 +29,56 @@ import doryphoros.me.japanesestudy.models.Card;
 public class KanjiStudyActivity extends Activity {
 
     private int currentCard;
+    private String zeroSide;
     private String firstSide;
     private String secondSide;
+    private String thirdSide;
     private int length;
     private boolean flipped; // false
-    private ArrayList<Card> studyCards;
-    private ArrayList<Card> starred;
-    TextView tv, cc, con;
+    private ArrayList<Kanji> studyCards;
+    private ArrayList<Kanji> starred;
+    TextView tv, cc, con, stillKanji;
     Button flipButton, previousButton, nextButton;
-    ImageView star;
-
-    @Override
+    ImageView star, userKanji;
+    boolean read;
+    VideoView mVideoView;
+    android.widget.MediaController mc;
+    DrawView kanjiDraw;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_study);
-        this.firstSide = SelectActivity.firstSide;
-        this.secondSide = SelectActivity.secondSide;
+        setContentView(R.layout.activity_kanji_study);
+        this.read = SelectActivity.read;
+        if (this.read) {
+            this.zeroSide = "";
+            this.firstSide = "still";
+            this.secondSide = "english";
+            this.thirdSide = "japanese";
+        } else {
+            this.zeroSide = "japanese";
+            this.firstSide = "english";
+            this.secondSide = "still";
+            this.thirdSide = "";
+            mVideoView  = (VideoView)findViewById(R.id.video_view);
+            kanjiDraw = (DrawView)findViewById(R.id.kanji_draw);
+            userKanji = (ImageView)findViewById(R.id.user_kanji);
+            mc = new android.widget.MediaController(this);
+            mc.hide();
+            mVideoView.setMediaController(mc);
+
+            mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    System.out.println("onError");
+                    return false;
+                }
+            });
+        }
         this.flipped = false;
         tv = (TextView) findViewById(R.id.card_text);
+        if (!this.read) {
+            tv = (TextView) findViewById(R.id.card_text_small);
+            stillKanji = (TextView) findViewById(R.id.still_kanji);
+        }
         con = (TextView) findViewById(R.id.card_text_con);
         cc = (TextView) findViewById(R.id.card_count);
         flipButton = (Button) findViewById(R.id.flip_button);
@@ -49,7 +92,7 @@ public class KanjiStudyActivity extends Activity {
                 starred.add(studyCards.get(currentCard));
             }
         });
-        studyCards = SelectActivity.selectedCards;
+        studyCards = SelectActivity.selectedKanji;
         reshuffle(false);
     }
 
@@ -102,7 +145,7 @@ public class KanjiStudyActivity extends Activity {
     private void inProgress() {
         tv.setText(studyCards.get(currentCard).hm.get(this.firstSide));
         cc.setText("Card " + (currentCard + 1) + "/" + length);
-        con.setText(studyCards.get(currentCard).hm.get("con"));
+        con.setText(studyCards.get(currentCard).hm.get(this.zeroSide));
         previousButton.setText("Previous");
         flipButton.setText("Flip");
         nextButton.setText("Next");
@@ -125,6 +168,12 @@ public class KanjiStudyActivity extends Activity {
             }
         });
         star.setImageResource(R.drawable.ic_star_border_black_24dp);
+        stillKanji.setText("");
+        kanjiDraw.setVisibility(View.INVISIBLE);
+        kanjiDraw.setVisibility(View.VISIBLE);
+        kanjiDraw.clear();
+        userKanji.setVisibility(View.INVISIBLE);
+        mVideoView.setVisibility(View.INVISIBLE);
     }
 
     private void reshuffle(Boolean remove) {
@@ -135,23 +184,36 @@ public class KanjiStudyActivity extends Activity {
         }
         // reset starred
         starred = new ArrayList<>();
-        SelectActivity.shuffleSelectedCards();
+        SelectActivity.shuffleSelectedKanji();
         this.length = studyCards.size();
         advanceCard(true);
     }
 
     private void flip() {
         this.flipped = !this.flipped;
-        if (this.flipped) {
-            tv.setText(studyCards.get(currentCard).hm.get(this.secondSide));
+        if (!this.read) {
+            mVideoView.setVisibility(View.VISIBLE);
+            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + getResources().getIdentifier(studyCards.get(currentCard).motion, "raw", getPackageName()));
+            mVideoView.setVideoURI(uri);
+            mVideoView.requestFocus();
+            mVideoView.start();
+            stillKanji.setText(studyCards.get(currentCard).still);
+            Bitmap b = Bitmap.createBitmap(kanjiDraw.getWidth(), kanjiDraw.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+            kanjiDraw.draw(c);
+            userKanji.setVisibility(View.VISIBLE);
+            userKanji.setImageBitmap(b);
+            kanjiDraw.setVisibility(View.INVISIBLE);
         } else {
-            tv.setText(studyCards.get(currentCard).hm.get(this.firstSide));
+            if (this.flipped) {
+                tv.setText(studyCards.get(currentCard).hm.get(this.secondSide));
+                con.setText(studyCards.get(currentCard).hm.get(this.thirdSide));
+            } else {
+                tv.setText(studyCards.get(currentCard).hm.get(this.firstSide));
+                con.setText(studyCards.get(currentCard).hm.get(this.zeroSide));
+            }
         }
-    }
 
-    private void verbConjugate(Card c, String s) {
-        // select string
-        // select verb type
     }
 
 }
