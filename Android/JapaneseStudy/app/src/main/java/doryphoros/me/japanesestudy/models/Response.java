@@ -8,4 +8,5 @@ import java.util.ArrayList;
  */
 public class Response {
     public ArrayList<Card> cards;
+    public ArrayList<Kanji> kanji;
 }

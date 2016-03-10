@@ -19,6 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import doryphoros.me.japanesestudy.ButtonAdapter;
 import doryphoros.me.japanesestudy.R;
 import doryphoros.me.japanesestudy.constants.JPConstants;
 import doryphoros.me.japanesestudy.models.Card;
+import doryphoros.me.japanesestudy.models.Kanji;
 import doryphoros.me.japanesestudy.models.Tag;
 import doryphoros.me.japanesestudy.utils.JPUtils;
 
@@ -47,6 +51,7 @@ public class SelectActivity extends AppCompatActivity {
     public static ArrayList<String> selectedConTags;
     public static ArrayList<String> badConTags;
     public static List<Card> cards;
+    public static List<Kanji> kanji;
     public static ArrayList<Card> selectedCards;
     public static String firstSide, secondSide;
 
@@ -108,21 +113,33 @@ public class SelectActivity extends AppCompatActivity {
     }
 
     private void getJSON() {
-        File file = getBaseContext().getFileStreamPath(JPConstants.USER_DATA_FILENAME);
+        File file = getBaseContext().getFileStreamPath(JPConstants.CARD_DATA_FILENAME);
         JsonElement jsonElement = null;
         if (file.exists()) {
-            jsonElement = JPUtils.getJsonFromFile(this, JPConstants.USER_DATA_FILENAME);
+            jsonElement = JPUtils.getJsonFromFile(this, JPConstants.CARD_DATA_FILENAME);
             Log.d("MainACTIVITY", "read from file: " + jsonElement.toString());
             Type listType = new TypeToken<List<Card>>(){}.getType();
-            cards = (List<Card>) new Gson().fromJson(jsonElement, listType);
+                cards = (List<Card>) new Gson().fromJson(jsonElement, listType);
             for (Card c : cards) {
                 c.createHash();
             }
             selectedCards = new ArrayList<Card>();
             initTags();
+            kanji = (List<Kanji>) new Gson().fromJson(jsonElement, listType);
         } else {
             //error
         }
+        file = getBaseContext().getFileStreamPath(JPConstants.KANJI_DATA_FILENAME);
+        jsonElement = null;
+        if (file.exists()) {
+            jsonElement = JPUtils.getJsonFromFile(this, JPConstants.KANJI_DATA_FILENAME);
+            Log.d("MainACTIVITY", "read from file: " + jsonElement.toString());
+            Type listType = new TypeToken<List<Card>>(){}.getType();
+            kanji = (List<Kanji>) new Gson().fromJson(jsonElement, listType);
+        } else {
+            //error
+        }
+        Log.d("SelectActivity", "Done with getJSON");
     }
 
     private void downloadJSON() {

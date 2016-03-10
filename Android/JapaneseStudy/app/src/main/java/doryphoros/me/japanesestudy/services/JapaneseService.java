@@ -14,4 +14,6 @@ import retrofit.http.Query;
 public interface JapaneseService {
     @GET(("/card/findCards"))
     void getCards(Callback<JsonElement> cb);
+    @GET(("/kanji/findKanji"))
+    void getKanji(Callback<JsonElement> cb);
 }

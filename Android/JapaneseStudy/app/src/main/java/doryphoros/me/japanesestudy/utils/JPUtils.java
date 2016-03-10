@@ -13,6 +13,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import doryphoros.me.japanesestudy.activities.MainActivity;
 import doryphoros.me.japanesestudy.constants.JPConstants;
 import doryphoros.me.japanesestudy.services.JapaneseService;
@@ -35,6 +40,7 @@ import retrofit.client.Response;
 public class JPUtils {
 
     static final int READ_BLOCK_SIZE = 100;
+    static JSONObject jsonObject = new JSONObject();
     public final static String TAG = "JPUtils";
 
     public static void storeJsonToFile(Context context, JsonElement jsonElement, String filename) {
@@ -99,13 +105,34 @@ public class JPUtils {
             public void success(JsonElement jsonElement, Response response) {
                 Log.d(TAG, "success!");
                 Log.d(TAG, "from api: " + jsonElement.toString());
-                Toast.makeText(context, "Data downloaded successfully", Toast.LENGTH_SHORT).show();
-                JPUtils.storeJsonToFile(context, jsonElement, JPConstants.USER_DATA_FILENAME);
+                JPUtils.storeJsonToFile(context, jsonElement, JPConstants.CARD_DATA_FILENAME);
+                RestAdapter restAdapter = new RestAdapter.Builder()
+                        .setEndpoint("http://192.168.1.111:3000")
+                        .setLogLevel(RestAdapter.LogLevel.FULL)
+                        .build();
+                JapaneseService service = restAdapter.create(JapaneseService.class);
+                System.out.println("calling getKanji");
+                service.getKanji(new Callback<JsonElement>() {
+                    @Override
+                    public void success(JsonElement jsonElement, Response response) {
+                        Log.d(TAG, "success!");
+                        Log.d(TAG, "from api: " + jsonElement.toString());
+                        Toast.makeText(context, "Data downloaded successfully", Toast.LENGTH_SHORT).show();
+                        JPUtils.storeJsonToFile(context, jsonElement, JPConstants.KANJI_DATA_FILENAME);
                 /*
                 AuthResponse authResponse = new Gson().fromJson(jsonElement, AuthResponse.class);
                 UserData.instance = authResponse.user;
                 */
-                cb.onDataLoaded();
+                        cb.onDataLoaded();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "failure");
+                        Toast.makeText(context, "Failure! Data was not downloaded", Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                });
             }
 
             @Override
