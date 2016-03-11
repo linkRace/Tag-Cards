@@ -23,7 +23,7 @@ public class RestClient
                 Context.MODE_PRIVATE);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://192.168.1.111:3000")
+                .setEndpoint("http://doryphoros.me:3000")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
