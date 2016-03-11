@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.session.MediaController;
 import android.net.Uri;
@@ -40,7 +41,7 @@ public class KanjiStudyActivity extends Activity {
     private ArrayList<Kanji> starred;
     TextView tv, cc, con, stillKanji, smallText;
     Button flipButton, previousButton, nextButton;
-    ImageView star, userKanji;
+    ImageView star, userKanji, replay;
     boolean read;
     VideoView mVideoView;
     android.widget.MediaController mc;
@@ -64,6 +65,7 @@ public class KanjiStudyActivity extends Activity {
         });
         stillKanji = (TextView) findViewById(R.id.still_kanji);
         smallText = (TextView) findViewById(R.id.card_text_small);
+        replay = (ImageView) findViewById(R.id.replay_kanji);
         this.read = SelectActivity.read;
         if (this.read) {
             this.zeroSide = "";
@@ -76,12 +78,23 @@ public class KanjiStudyActivity extends Activity {
             stillKanji.setVisibility(View.INVISIBLE);
             smallText.setVisibility(View.INVISIBLE);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            replay.setVisibility(View.INVISIBLE);
         } else {
             this.zeroSide = "japanese";
             this.firstSide = "english";
             this.secondSide = "still";
             this.thirdSide = "";
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            replay.setImageResource(R.drawable.ic_play_light);
+            replay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mVideoView.isPlaying()) {
+                        mVideoView.seekTo(0);
+                    }
+                    mVideoView.start();
+                }
+            });
         }
         this.flipped = false;
         tv = (TextView) findViewById(R.id.card_text);
@@ -184,6 +197,7 @@ public class KanjiStudyActivity extends Activity {
             kanjiDraw.clear();
             userKanji.setVisibility(View.INVISIBLE);
             mVideoView.setVisibility(View.INVISIBLE);
+            replay.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -204,6 +218,7 @@ public class KanjiStudyActivity extends Activity {
     private void flip() {
         this.flipped = !this.flipped;
         if (!this.read) {
+            replay.setVisibility(View.VISIBLE);
             mVideoView.setVisibility(View.VISIBLE);
             Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + getResources().getIdentifier(studyCards.get(currentCard).motion, "raw", getPackageName()));
             mVideoView.setVideoURI(uri);
