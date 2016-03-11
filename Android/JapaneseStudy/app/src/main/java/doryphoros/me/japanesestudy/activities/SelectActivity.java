@@ -279,7 +279,7 @@ public class SelectActivity extends AppCompatActivity {
             matched = 0;
             for (st = 0; st < stLength; ++st) {
                 if (matched == st) {
-                    for (int t = 0, length2 = cards.get(c).tags.size(); t < length2; ++t) {
+                    for (int t = 0, length2 = kanji.get(c).tags.size(); t < length2; ++t) {
                         if (selectedKanjiTags.get(st).equalsIgnoreCase(kanji.get(c).tags.get(t))) {
                             ++matched;
                             break;

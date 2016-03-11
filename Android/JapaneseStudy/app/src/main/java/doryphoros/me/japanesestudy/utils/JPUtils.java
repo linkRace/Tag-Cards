@@ -95,7 +95,7 @@ public class JPUtils {
 
     public static void getDataFromApi(final Context context, final DataLoaderCallback cb) {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://192.168.1.111:3000")
+                .setEndpoint("http://doryphoros.me:3000")
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         JapaneseService service = restAdapter.create(JapaneseService.class);
@@ -107,7 +107,7 @@ public class JPUtils {
                 Log.d(TAG, "from api: " + jsonElement.toString());
                 JPUtils.storeJsonToFile(context, jsonElement, JPConstants.CARD_DATA_FILENAME);
                 RestAdapter restAdapter = new RestAdapter.Builder()
-                        .setEndpoint("http://192.168.1.111:3000")
+                        .setEndpoint("http://doryphoros.me:3000")
                         .setLogLevel(RestAdapter.LogLevel.FULL)
                         .build();
                 JapaneseService service = restAdapter.create(JapaneseService.class);

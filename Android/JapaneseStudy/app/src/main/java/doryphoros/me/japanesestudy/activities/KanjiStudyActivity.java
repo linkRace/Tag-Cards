@@ -1,6 +1,7 @@
 package doryphoros.me.japanesestudy.activities;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
@@ -37,7 +38,7 @@ public class KanjiStudyActivity extends Activity {
     private boolean flipped; // false
     private ArrayList<Kanji> studyCards;
     private ArrayList<Kanji> starred;
-    TextView tv, cc, con, stillKanji;
+    TextView tv, cc, con, stillKanji, smallText;
     Button flipButton, previousButton, nextButton;
     ImageView star, userKanji;
     boolean read;
@@ -47,37 +48,45 @@ public class KanjiStudyActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kanji_study);
+        mVideoView  = (VideoView)findViewById(R.id.video_view);
+        kanjiDraw = (DrawView)findViewById(R.id.kanji_draw);
+        userKanji = (ImageView)findViewById(R.id.user_kanji);
+        mc = new android.widget.MediaController(this);
+        mc.hide();
+        mVideoView.setMediaController(mc);
+
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                System.out.println("onError");
+                return false;
+            }
+        });
+        stillKanji = (TextView) findViewById(R.id.still_kanji);
+        smallText = (TextView) findViewById(R.id.card_text_small);
         this.read = SelectActivity.read;
         if (this.read) {
             this.zeroSide = "";
             this.firstSide = "still";
             this.secondSide = "english";
             this.thirdSide = "japanese";
+            mVideoView.setVisibility(View.INVISIBLE);
+            kanjiDraw.setVisibility(View.INVISIBLE);
+            userKanji.setVisibility(View.INVISIBLE);
+            stillKanji.setVisibility(View.INVISIBLE);
+            smallText.setVisibility(View.INVISIBLE);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
             this.zeroSide = "japanese";
             this.firstSide = "english";
             this.secondSide = "still";
             this.thirdSide = "";
-            mVideoView  = (VideoView)findViewById(R.id.video_view);
-            kanjiDraw = (DrawView)findViewById(R.id.kanji_draw);
-            userKanji = (ImageView)findViewById(R.id.user_kanji);
-            mc = new android.widget.MediaController(this);
-            mc.hide();
-            mVideoView.setMediaController(mc);
-
-            mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    System.out.println("onError");
-                    return false;
-                }
-            });
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         this.flipped = false;
         tv = (TextView) findViewById(R.id.card_text);
         if (!this.read) {
             tv = (TextView) findViewById(R.id.card_text_small);
-            stillKanji = (TextView) findViewById(R.id.still_kanji);
         }
         con = (TextView) findViewById(R.id.card_text_con);
         cc = (TextView) findViewById(R.id.card_count);
@@ -168,12 +177,15 @@ public class KanjiStudyActivity extends Activity {
             }
         });
         star.setImageResource(R.drawable.ic_star_border_black_24dp);
-        stillKanji.setText("");
-        kanjiDraw.setVisibility(View.INVISIBLE);
-        kanjiDraw.setVisibility(View.VISIBLE);
-        kanjiDraw.clear();
-        userKanji.setVisibility(View.INVISIBLE);
-        mVideoView.setVisibility(View.INVISIBLE);
+        if (!this.read) {
+            stillKanji.setText("");
+            kanjiDraw.setVisibility(View.INVISIBLE);
+            kanjiDraw.setVisibility(View.VISIBLE);
+            kanjiDraw.clear();
+            userKanji.setVisibility(View.INVISIBLE);
+            mVideoView.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private void reshuffle(Boolean remove) {
