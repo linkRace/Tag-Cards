@@ -25,6 +25,26 @@ module.exports = {
 			}
 		});
 	},
+	replace: function(req, res) {
+		Kanji.find({}, {select: ['id', 'japanese', 'english', 'examples', 'still', 'motion', 'tags']}).exec(function(err,c) {
+			if (err) {
+				console.error(err);
+				res.serverError(err);
+			} else if (c) {
+				for (var temp, i = 0, length = c.length; i < length; ++i) {
+					if (c[i].tags.match("all")) {
+
+					} else {
+							c[i].tags += ",all";
+							c[i].save();
+					}
+				}
+				res.ok();
+			} else {
+				res.badRequest();
+			}
+		});
+	},
 	findKanji: function(req, res) {
 		Kanji.find({}, {select: ['id', 'japanese', 'english', 'examples', 'still', 'motion', 'tags']}).exec(function(err,c) {
 			if (err) {
