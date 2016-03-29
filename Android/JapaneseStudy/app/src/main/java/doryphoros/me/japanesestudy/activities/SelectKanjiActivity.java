@@ -15,6 +15,7 @@ import doryphoros.me.japanesestudy.ButtonAdapter;
 import doryphoros.me.japanesestudy.R;
 import doryphoros.me.japanesestudy.models.Card;
 import doryphoros.me.japanesestudy.models.Kanji;
+import doryphoros.me.japanesestudy.models.Tag;
 
 public class SelectKanjiActivity extends AppCompatActivity {
 
@@ -30,13 +31,8 @@ public class SelectKanjiActivity extends AppCompatActivity {
     private void drawTags() {
         ArrayList<String> strings = new ArrayList<String>();
         HashMap<String,Integer> hs = new HashMap<String,Integer>();
-        for (Kanji c : SelectActivity.kanji) {
-            for (String t : c.tags) {
-                if (!hs.containsKey(t)) {
-                    hs.put(t,1);
-                    strings.add(t);
-                }
-            }
+        for (Tag t : SelectActivity.kanjiTags) {
+            strings.add(t.value);
         }
         GridView tagGrid = (GridView) findViewById(R.id.tag_grid_kanji);
         tagGrid.setAdapter(new ButtonAdapter(SelectKanjiActivity.this, R.layout.tag_button, strings, "kanji"));
